@@ -169,49 +169,11 @@ before installing Holmes.
 
 Install Holmes using the following commands:
 
-*Linux:*
 ```
-pip3 install holmes-extractor
-```
-
-*Windows:*
-```
-pip install holmes-extractor
-```
-
-To upgrade from a previous Holmes version, issue the following commands and then
-[reissue the commands to download the spaCy and coreferee models](#installing-the-spacy-and-coreferee-models) to ensure
-you have the correct versions of them:
-
-*Linux:*
-```
-pip3 install --upgrade holmes-extractor
-```
-
-*Windows:*
-```
-pip install --upgrade holmes-extractor
-```
-
-If you wish to use the examples and tests, clone the source code using
-
-```
-git clone https://github.com/explosion/holmes-extractor
-```
-
-If you wish to experiment with changing the source code, you can
-override the installed code by starting Python (type `python3` (Linux) or `python`
-(Windows)) in the parent directory of the directory where your altered `holmes_extractor`
-module code is. If you have checked Holmes out of Git, this will be the `holmes-extractor` directory.
-
-If you wish to uninstall Holmes again, this is achieved by deleting the installed
-file(s) directly from the file system. These can be found by issuing the
-following from the Python command prompt started from any directory **other**
-than the parent directory of `holmes_extractor`:
-
-```
-import holmes_extractor
-print(holmes_extractor.__file__)
+python -m venv .holmes # command may be 'python3' on some operating systems
+source .holmes/bin/activate
+python -m pip install -U pip setuptools wheel
+python -m pip install -U holmes-extractor
 ```
 
 <a id="installing-the-spacy-and-coreferee-models"></a>
@@ -220,42 +182,22 @@ print(holmes_extractor.__file__)
 The spaCy and coreferee libraries that Holmes builds upon require
 language-specific models that have to be downloaded separately before Holmes can be used:
 
-*Linux/English:*
-```
-python3 -m spacy download en_core_web_trf
-python3 -m spacy download en_core_web_lg
-python3 -m coreferee install en
-```
-
-*Linux/German:*
-```
-pip3 install spacy-lookups-data # (from spaCy 3.3 onwards)
-python3 -m spacy download de_core_news_lg
-python3 -m coreferee install de
-```
-
-*Windows/English:*
+*English:*
 ```
 python -m spacy download en_core_web_trf
 python -m spacy download en_core_web_lg
 python -m coreferee install en
 ```
 
-*Windows/German:*
+*German:*
 ```
-pip install spacy-lookups-data # (from spaCy 3.3 onwards)
+python -m pip install -U spacy-lookups-data # (from spaCy 3.3 onwards)
 python -m spacy download de_core_news_lg
 python -m coreferee install de
 ```
 
 and if you plan to run the [regression tests](#development-and-testing-guidelines):
 
-*Linux:*
-```
-python3 -m spacy download en_core_web_sm
-```
-
-*Windows:*
 ```
 python -m spacy download en_core_web_sm
 ```
