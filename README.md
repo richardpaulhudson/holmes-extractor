@@ -7,7 +7,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
     -   [1.2 Installation](#installation)
         -   [1.2.1 Prerequisites](#prerequisites)
         -   [1.2.2 Library installation](#library-installation)
-        -   [1.2.3 Installing the spaCy and coreferee models](#installing-the-spacy-and-coreferee-models)
+        -   [1.2.3 Installing the spaCy and Coreferee models](#installing-the-spacy-and-Coreferee-models)
         -   [1.2.4 Comments about deploying Holmes in an
             enterprise
             environment](#comments-about-deploying-holmes-in-an-enterprise-environment)
@@ -176,10 +176,10 @@ python -m pip install -U pip setuptools wheel
 python -m pip install -U holmes-extractor
 ```
 
-<a id="installing-the-spacy-and-coreferee-models"></a>
-##### 1.2.3 Installing the spaCy and coreferee models
+<a id="installing-the-spacy-and-Coreferee-models"></a>
+##### 1.2.3 Installing the spaCy and Coreferee models
 
-The spaCy and coreferee libraries that Holmes builds upon require
+The spaCy and Coreferee libraries that Holmes builds upon require
 language-specific models that have to be downloaded separately before Holmes can be used:
 
 *English:*
@@ -222,7 +222,7 @@ That said, Holmes is both vertically and horizontally scalable. With sufficient 
 
 Holmes holds loaded documents in memory, which ties in with its intended use with large but not massive corpora. The performance of document loading, [structural extraction](#structural-extraction) and [topic matching](#topic-matching) all degrade heavily if the operating system has to swap memory pages to secondary storage, because Holmes can require memory from a variety of pages to be addressed when processing a single sentence. This means it is important to supply enough RAM on each machine to hold all loaded documents.
 
-Please note the [above comments](#installing-the-spacy-and-coreferee-models) about the relative resource requirements of the different models.
+Please note the [above comments](#installing-the-spacy-and-Coreferee-models) about the relative resource requirements of the different models.
 
 <a id="getting-started"></a>
 #### 1.3 Getting started
@@ -2043,7 +2043,7 @@ that only documents whose labels begin with a certain string should be searched.
 <a id="version-300"></a>
 ##### 8.4.5 Version 3.0.0
 
--  Moved to [coreferee](https://github.com/explosion/coreferee) as the source of coreference information, meaning that coreference resolution is now active for German as well as English; all documents can be serialized; and the latest spaCy version can be supported.
+-  Moved to [Coreferee](https://github.com/explosion/Coreferee) as the source of coreference information, meaning that coreference resolution is now active for German as well as English; all documents can be serialized; and the latest spaCy version can be supported.
 -  The corpus frequencies of words are now taken into account when scoring topic matches.
 -  Reverse dependencies are now taken into account, so that e.g. *a man dies* can match *the dead man* although the dependencies in the two phrases point in opposite directions.
 -  Merged the pre-existing `Manager` and `MultiprocessingManager` classes into a single `Manager` class, with a redesigned public interface, that uses worker threads for everything except supervised document classification.
