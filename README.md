@@ -1661,7 +1661,7 @@ Returns a serialized model that can be reloaded using
 ```
 
 <a id="dictionary"></a>
-#### 6.7 Dictionary returned from `Manager.match()`)
+#### 6.7 Dictionary returned from `Manager.match()`
 
 ``` {.python}
 A text-only representation of a match between a search phrase and a
