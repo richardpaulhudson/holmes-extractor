@@ -66,7 +66,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
     (returned from `SupervisedTopicModelTrainer.classifier()` and
     `Manager.deserialize_supervised_topic_classifier()`)
     -   [6.7 Dictionary returned from
-        `Manager.match()`)](#dictionary)
+        `Manager.match()`](#dictionary)
     -   [6.8 Dictionary returned from
         `Manager.topic_match_documents_against()`](#topic-match-dictionary)
 -   [7 A note on the license](#a-note-on-the-license)
