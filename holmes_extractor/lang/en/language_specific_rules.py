@@ -542,10 +542,10 @@ class LanguageSpecificSemanticAnalyzer(SemanticAnalyzer):
             # 'regrettably', 'horribly' -> 'regrettable', 'horrible'
             if lemma.endswith("ably") or lemma.endswith("ibly"):
                 return "".join((lemma[:-1], "e"))
-            if lemma.endswith("ly"):
+            if lemma.endswith("ly") and len(lemma) > 2:
                 derived_lemma = lemma[:-2]
                 # 'happily' -> 'happy'
-                if derived_lemma[-1] == "i":
+                if derived_lemma[-1] == "i" and len(derived_lemma) > 1:
                     derived_lemma = "".join((derived_lemma[:-1], "y"))
                 return derived_lemma
         # singing -> sing
