@@ -92,6 +92,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
         -   [8.4.4 Version 2.2.1](#version-221)
         -   [8.4.5 Version 3.0.0](#version-300)
         -   [8.4.6 Version 4.0.0](#version-400)
+        -   [8.4.7 Version 4.0.1](#version-401)
 
 <a id="introduction"></a>
 ### 1. Introduction
@@ -2059,3 +2060,8 @@ that only documents whose labels begin with a certain string should be searched.
 installation much faster and more trouble-free.
 - Holmes now supports a wide range of Python (3.6—3.10) and spaCy (3.1—3.3) versions.
 - A new [demo website](https://demo.holmes.prod.demos.explosion.services/) has been developed by <a href="mailto:edward@explosion.ai">Edward Schmuhl</a> based on Streamlit.
+
+<a id="version-401"></a>
+##### 8.4.7 Version 4.0.1
+
+- A bug has been fixed that could cause an infinite loop during parsing.

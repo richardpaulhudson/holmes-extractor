@@ -768,7 +768,7 @@ class LanguageSpecificSemanticAnalyzer(SemanticAnalyzer):
                                         )
                                     )
                         return
-                    if working_token.dep_ != "ROOT":
+                    if working_token != working_token.head:
                         working_token = working_token.head
                     else:
                         return
