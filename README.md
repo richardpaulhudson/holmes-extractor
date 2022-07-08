@@ -93,6 +93,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
         -   [8.4.5 Version 3.0.0](#version-300)
         -   [8.4.6 Version 4.0.0](#version-400)
         -   [8.4.7 Version 4.0.1](#version-401)
+        -   [8.4.8 Version 4.0.2](#version-402)
 
 <a id="introduction"></a>
 ### 1. Introduction
@@ -125,7 +126,7 @@ the most relevant passages within the documents. Because there is no strict requ
 word with its own meaning in the query document match a specific word or words in the searched documents, more matches are found
 than in the structural extraction use case, but the matches do not contain structured information that can be
 used in subsequent processing. The topic matching use case is demonstrated by [a website allowing searches within
-the Harry Potter corpus (for English) and around 350 traditional stories (for German)](https://demo.holmes.prod.demos.explosion.services/).
+six Charles Dickens novels (for English) and around 350 traditional stories (for German)](https://holmes-demo.explosion.services/).
 
 - The [supervised document classification](#supervised-document-classification) use case uses training data to
 learn a classifier that assigns one or more **classification labels** to new documents based on what they are about.
@@ -1085,7 +1086,7 @@ restrictions on the grammatical structures permissible within the query document
 
 The Holmes source code ships with three examples demonstrating the topic matching use case with an English literature
 corpus, a German literature corpus and a German legal corpus respectively. The two literature examples are hosted at
-the [Holmes demonstration website](https://demo.holmes.prod.demos.explosion.services/), although users are encouraged to run [the scripts](https://github.com/explosion/holmes-extractor/blob/master/examples/)
+the [Holmes demonstration website](https://holmes-demo.explosion.services/), although users are encouraged to run [the scripts](https://github.com/explosion/holmes-extractor/blob/master/examples/)
 locally as well to get a feel for how they work. The German law example starts a simple interactive console and its [script](https://github.com/explosion/holmes-extractor/blob/master/examples/example_search_DE_law.py) contains some example queries as comments.
 
 Topic matching uses a variety of strategies to find text passages that are relevant to the query. These include
@@ -2033,7 +2034,7 @@ same stem.
 that only documents whose labels begin with a certain string should be searched.
 -  Error handling and reporting have been improved for the MultiprocessingManager.
 -  Numerous minor improvements and bugfixes.
--  The [demo website](https://demo.holmes.prod.demos.explosion.services/) has been updated to reflect the changes.
+-  The [demo website](https://holmes-demo.explosion.services/) has been updated to reflect the changes.
 
 <a id="version-221"></a>
 ##### 8.4.4 Version 2.2.1
@@ -2049,7 +2050,7 @@ that only documents whose labels begin with a certain string should be searched.
 -  Reverse dependencies are now taken into account, so that e.g. *a man dies* can match *the dead man* although the dependencies in the two phrases point in opposite directions.
 -  Merged the pre-existing `Manager` and `MultiprocessingManager` classes into a single `Manager` class, with a redesigned public interface, that uses worker threads for everything except supervised document classification.
 -  Added support for [initial question words](#initial-question-word-matching).
--  The [demo website](https://demo.holmes.prod.demos.explosion.services/) has been updated to reflect the changes.
+-  The [demo website](https://holmes-demo.explosion.services/) has been updated to reflect the changes.
 
 <a id="version-400"></a>
 ##### 8.4.6 Version 4.0.0
@@ -2059,9 +2060,14 @@ that only documents whose labels begin with a certain string should be searched.
 - With the exception of [rdflib](https://github.com/RDFLib/rdflib), all direct dependencies are now from within the Explosion stack, making
 installation much faster and more trouble-free.
 - Holmes now supports a wide range of Python (3.6—3.10) and spaCy (3.1—3.3) versions.
-- A new [demo website](https://demo.holmes.prod.demos.explosion.services/) has been developed by <a href="mailto:edward@explosion.ai">Edward Schmuhl</a> based on Streamlit.
+- A new [demo website](https://holmes-demo.explosion.services/) has been developed by <a href="mailto:edward@explosion.ai">Edward Schmuhl</a> based on Streamlit.
 
 <a id="version-401"></a>
 ##### 8.4.7 Version 4.0.1
 
 - A bug has been fixed that could cause an infinite loop during parsing.
+
+<a id="version-402"></a>
+##### 8.4.8 Version 4.0.2
+
+- The URL of the [demo website](https://holmes-demo.explosion.services/) changed; a new release was required to update the PyPI documentation, which references it.
