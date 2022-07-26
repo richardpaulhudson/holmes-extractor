@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Union
 from multiprocessing import Process, Queue, Manager as MultiprocessingManager, cpu_count
 from threading import Lock
 from string import punctuation
@@ -48,8 +48,12 @@ nlp_lock = Lock()
 pipeline_components_lock = Lock()
 
 
-def get_nlp(model_name: str) -> Language:
+def get_nlp(model: Union[str, spacy.Language]) -> Language:
     with nlp_lock:
+        if isinstance(model, spacy.Language):
+            return model
+        else:
+            model_name = model
         if model_name not in model_names_to_nlps:
             if model_name.endswith("_trf"):
                 model_names_to_nlps[model_name] = spacy.load(
@@ -110,7 +114,7 @@ class Manager:
 
     def __init__(
         self,
-        model: str,
+        model: Union[str, spacy.Language],
         *,
         overall_similarity_threshold: float = 1.0,
         embedding_based_matching_on_root_words: bool = False,
