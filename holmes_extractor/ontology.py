@@ -74,9 +74,9 @@ class Ontology:
         self._graph = rdflib.Graph()
         if isinstance(self.path, list):
             for entry in ontology_path:
-                self._graph.load(entry)
+                self._graph.parse(entry)
         else:
-            self._graph.load(ontology_path)
+            self._graph.parse(ontology_path)
         self.owl_class_type = owl_class_type
         self.owl_individual_type = owl_individual_type
         self.owl_type_link = owl_type_link

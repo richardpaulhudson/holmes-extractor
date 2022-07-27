@@ -94,6 +94,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
         -   [8.4.6 Version 4.0.0](#version-400)
         -   [8.4.7 Version 4.0.1](#version-401)
         -   [8.4.8 Version 4.0.2](#version-402)
+        -   [8.4.9 Version 4.0.3](#version-403)
 
 <a id="introduction"></a>
 ### 1. Introduction
@@ -2070,3 +2071,8 @@ installation much faster and more trouble-free.
 ##### 8.4.8 Version 4.0.2
 
 - The URL of the [demo website](https://holmes-demo.explosion.services/) changed; a new release was required to update the PyPI documentation, which references it.
+
+<a id="version-403"></a>
+##### 8.4.9 Version 4.0.3
+
+- A new version of rdflib included a method name change that necessitated a change in Holmes.
