@@ -277,7 +277,7 @@ class EnglishDocumentationExamplesTest(unittest.TestCase):
         matches = holmes_manager.match()
         self.assertEqual(len(matches), 4)
         self.assertEqual([match['word_matches'][0]['document_phrase'] for match in matches], ['Royal Bank', 'Chipmaker MaxLinear Inc', 'Alphabet', 'Kaseya'])
-        self.assertEqual([match['word_matches'][2]['document_phrase'] for match in matches], ['Brewin Dolphin', 'Silicon Motion Technology Corp', 'cybersecurity company Mandiant', 'Datto'])
+        self.assertIn([match['word_matches'][2]['document_phrase'] for match in matches], (['Brewin Dolphin', 'Silicon Motion Technology Corp', 'cybersecurity company Mandiant', 'Datto'], ['Brewin Dolphin', 'Silicon Motion Technology Corp', 'Mandiant', 'Datto']))
 
     def test_blog_example_3(self):
         holmes_manager.remove_all_documents()
