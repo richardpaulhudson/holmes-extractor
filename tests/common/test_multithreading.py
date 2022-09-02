@@ -4,6 +4,7 @@ import os
 from threading import Thread
 from queue import Queue
 from collections import OrderedDict
+from packaging import version
 
 NUMBER_OF_THREADS = 10
 
@@ -12,7 +13,7 @@ ontology = holmes.Ontology(os.sep.join((script_directory, "test_ontology.owl")))
 manager = holmes.Manager(
     "en_core_web_trf",
     ontology=ontology,
-    overall_similarity_threshold=0.90,
+    overall_similarity_threshold=0.85,
     number_of_workers=2,
 )
 manager.parse_and_register_document("The hungry lion chased the angry gnu.", "lion")
@@ -84,14 +85,24 @@ class MultithreadingTest(unittest.TestCase):
             ):
                 output[0]["sentences_within_document"] = "I saw a foal."
             if first_argument == "A tiger chases a gnu":
-                self.assertAlmostEqual(
-                    float(output[1]["overall_similarity_measure"]), 0.90286449, places=3
-                )
-                self.assertAlmostEqual(
-                    float(output[1]["word_matches"][0]["similarity_measure"]),
-                    0.7359829,
-                    places=3,
-                )
+                if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+                    self.assertAlmostEqual(
+                        float(output[1]["overall_similarity_measure"]), 0.89362134, places=3
+                    )
+                    self.assertAlmostEqual(
+                        float(output[1]["word_matches"][0]["similarity_measure"]),
+                        0.7136095,
+                        places=3,
+                    )
+                else:
+                    self.assertAlmostEqual(
+                        float(output[1]["overall_similarity_measure"]), 0.90286449, places=3
+                    )
+                    self.assertAlmostEqual(
+                        float(output[1]["word_matches"][0]["similarity_measure"]),
+                        0.7359829,
+                        places=3,
+                    )
                 output[1]["overall_similarity_measure"] = "0"
                 output[1]["word_matches"][0]["similarity_measure"] = "0"
             self.assertEqual(output, expected_output)
@@ -620,9 +631,7 @@ class MultithreadingTest(unittest.TestCase):
         )
 
     def test_multithreading_matching_against_documents_embedding_matching(self):
-        self._inner_match_against_documents(
-            "A tiger chases a gnu",
-            [
+        expected_output =  [
                 {
                     "search_phrase_label": "",
                     "search_phrase_text": "A tiger chases a gnu",
@@ -769,7 +778,12 @@ class MultithreadingTest(unittest.TestCase):
                         },
                     ],
                 },
-            ],
+            ]
+        
+        if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+            expected_output[1]["word_matches"][0]["explanation"] = "Has a word embedding that is 71% similar to TIGER."
+        self._inner_match_against_documents(
+            "A tiger chases a gnu", expected_output
         )
 
     def test_multithreading_matching_against_documents_ontology_matching(self):

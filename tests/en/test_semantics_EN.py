@@ -681,7 +681,7 @@ class EnglishSemanticAnalyzerTest(unittest.TestCase):
 
     def test_multiple_preposition_dependencies_added_to_noun(self):
         doc = nlp(
-            "The employee needs insurance for the next five years and in Europe")
+            "The employee needs insurance for the next five years and for Europe")
         self.assertIn(doc[3]._.holmes.string_representation_of_children(),
                          ('4:prepposs(U); 8:pobjp(U); 10:prepposs(U); 11:pobjp(U)',
                          '4:prep; 8:pobjp; 10:prep; 11:pobjp'))
@@ -847,10 +847,12 @@ class EnglishSemanticAnalyzerTest(unittest.TestCase):
             "The table and the chair from which you and I ate and drank.")
         self.assertEqual(doc[6]._.holmes.string_representation_of_children(),
                          '-2:None')
-        self.assertEqual(doc[10]._.holmes.string_representation_of_children(),
-                         '1:pobjp(U); 4:pobjp(U); 5:prep(U); 7:nsubj; 9:nsubj; 11:cc; 12:conj')
-        self.assertEqual(doc[12]._.holmes.string_representation_of_children(),
-                         '1:pobjp; 4:pobjp(U); 5:prep; 7:nsubj(U); 9:nsubj(U)')
+        self.assertIn(doc[10]._.holmes.string_representation_of_children(),
+                         ('1:pobjp(U); 4:pobjp(U); 5:prep(U); 7:nsubj; 9:nsubj; 11:cc; 12:conj', 
+                         '1:pobjp; 4:pobjp(U); 5:prep; 7:nsubj; 9:nsubj; 11:cc; 12:conj'))
+        self.assertIn(doc[12]._.holmes.string_representation_of_children(),
+                         ('1:pobjp; 4:pobjp(U); 5:prep; 7:nsubj(U); 9:nsubj(U)',
+                         '1:pobjp(U); 4:pobjp(U); 5:prep(U); 7:nsubj(U); 9:nsubj(U)'))
 
     def test_parent_token_indexes(self):
         doc = nlp("Houses in the village.")

@@ -2,6 +2,7 @@ import unittest
 import holmes_extractor as holmes
 from holmes_extractor.topic_matching import TopicMatcher
 import os
+from packaging import version
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
 ontology = holmes.Ontology(os.sep.join((script_directory, 'test_ontology.owl')),
@@ -28,7 +29,10 @@ class EnglishInitialQuestionsTest(unittest.TestCase):
                                                               relation_matching_frequency_threshold=relation_matching_frequency_threshold,
                                                               embedding_matching_frequency_threshold=embedding_matching_frequency_threshold,
                                                               use_frequency_factor=use_frequency_factor)
-        self.assertEqual(int(topic_matches[0]['score']), highest_score)
+        if type(highest_score) == list:
+            self.assertIn(int(topic_matches[0]['score']), highest_score)
+        else:
+            self.assertEqual(int(topic_matches[0]['score']), highest_score)
         if answer_start is not None:
             self.assertEqual(topic_matches[0]['answers'][0][0], answer_start)
             self.assertEqual(topic_matches[0]['answers'][0][1], answer_end)
@@ -63,13 +67,22 @@ class EnglishInitialQuestionsTest(unittest.TestCase):
         manager.parse_and_register_document("The man sang a duet.", 'q')
         topic_matches = manager.topic_match_documents_against("Which person sings?",
         initial_question_word_embedding_match_threshold=0.5)
-        self.assertAlmostEqual(topic_matches[0]['score'], 288.3671696, places=3)
-        topic_matches[0]['score'] = 0
-        self.assertEqual([{'document_label': 'q', 'text': 'The man sang a duet.', 'text_to_match': 'Which person sings?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 2, 'sentences_start_index': 0, 'sentences_end_index': 5, 'sentences_character_start_index': 0, 'sentences_character_end_index': 20, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 55% similar to PERSON.'], [8, 12, 'relation', True, 'Matches SING directly.']], 'answers': [[0, 7]]}], topic_matches)
-        topic_matches = manager.topic_match_documents_against("A person sings", word_embedding_match_threshold=0.42)
-        self.assertAlmostEqual(topic_matches[0]['score'], 154.1835848, places=3)
-        topic_matches[0]['score'] = 0
-        self.assertEqual([{'document_label': 'q', 'text': 'The man sang a duet.', 'text_to_match': 'A person sings', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 2, 'sentences_start_index': 0, 'sentences_end_index': 5, 'sentences_character_start_index': 0, 'sentences_character_end_index': 20, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 55% similar to PERSON.'], [8, 12, 'relation', True, 'Matches SING directly.']], 'answers': []}], topic_matches)
+        if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+            self.assertAlmostEqual(topic_matches[0]['score'], 294.4563896, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual([{'document_label': 'q', 'text': 'The man sang a duet.', 'text_to_match': 'Which person sings?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 2, 'sentences_start_index': 0, 'sentences_end_index': 5, 'sentences_character_start_index': 0, 'sentences_character_end_index': 20, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 58% similar to PERSON.'], [8, 12, 'relation', True, 'Matches SING directly.']], 'answers': [[0, 7]]}], topic_matches)
+            topic_matches = manager.topic_match_documents_against("A person sings", word_embedding_match_threshold=0.42)
+            self.assertAlmostEqual(topic_matches[0]['score'], 157.2281948, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual([{'document_label': 'q', 'text': 'The man sang a duet.', 'text_to_match': 'A person sings', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 2, 'sentences_start_index': 0, 'sentences_end_index': 5, 'sentences_character_start_index': 0, 'sentences_character_end_index': 20, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 58% similar to PERSON.'], [8, 12, 'relation', True, 'Matches SING directly.']], 'answers': []}], topic_matches)
+        else:
+            self.assertAlmostEqual(topic_matches[0]['score'], 288.3671696, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual([{'document_label': 'q', 'text': 'The man sang a duet.', 'text_to_match': 'Which person sings?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 2, 'sentences_start_index': 0, 'sentences_end_index': 5, 'sentences_character_start_index': 0, 'sentences_character_end_index': 20, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 55% similar to PERSON.'], [8, 12, 'relation', True, 'Matches SING directly.']], 'answers': [[0, 7]]}], topic_matches)
+            topic_matches = manager.topic_match_documents_against("A person sings", word_embedding_match_threshold=0.42)
+            self.assertAlmostEqual(topic_matches[0]['score'], 154.1835848, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual([{'document_label': 'q', 'text': 'The man sang a duet.', 'text_to_match': 'A person sings', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 2, 'sentences_start_index': 0, 'sentences_end_index': 5, 'sentences_character_start_index': 0, 'sentences_character_end_index': 20, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 55% similar to PERSON.'], [8, 12, 'relation', True, 'Matches SING directly.']], 'answers': []}], topic_matches)
 
     def test_governed_interrogative_pronoun_matching_proper_noun(self):
         manager.remove_all_documents()
@@ -113,7 +126,7 @@ class EnglishInitialQuestionsTest(unittest.TestCase):
         self._check_equals("Which person came home?", 'I spoke to Richard Hudson. He came home', 98, 11, 25)
 
     def test_separate_embedding_threshold_for_question_words_normal_threshold_1(self):
-         self._check_equals("Which man came home?", 'The person came home', 52, 0, 10,
+         self._check_equals("Which man came home?", 'The person came home', [52, 53], 0, 10,
             word_embedding_match_threshold=1.0, initial_question_word_answer_score=20)
 
     def test_separate_embedding_threshold_for_question_words_normal_threshold_1_control(self):
@@ -121,7 +134,7 @@ class EnglishInitialQuestionsTest(unittest.TestCase):
             word_embedding_match_threshold=1.0, initial_question_word_answer_score=20)
 
     def test_separate_embedding_threshold_for_question_words_normal_threshold_below_1(self):
-         self._check_equals("Which man came home?", 'The person came home', 52, 0, 10,
+         self._check_equals("Which man came home?", 'The person came home', [52, 53], 0, 10,
             word_embedding_match_threshold=0.9, initial_question_word_answer_score=20)
 
     def test_separate_embedding_threshold_for_question_words_normal_threshold_below_1_control(self):
@@ -180,9 +193,14 @@ class EnglishInitialQuestionsTest(unittest.TestCase):
         topic_matches = manager.topic_match_documents_against("Which cat barked?",
         relation_matching_frequency_threshold=1.0, embedding_matching_frequency_threshold=1.0,
         initial_question_word_embedding_match_threshold=0.2, word_embedding_match_threshold=0.2)
-        self.assertAlmostEqual(topic_matches[0]['score'], 126.34484701824243, places=3)
-        topic_matches[0]['score'] = 0
-        self.assertEqual(topic_matches, [{'document_label': 'q', 'text': 'The dog barked. The dog barked. The dog barked.', 'text_to_match': 'Which cat barked?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 10, 'sentences_start_index': 0, 'sentences_end_index': 11, 'sentences_character_start_index': 0, 'sentences_character_end_index': 47, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [8, 14, 'relation', True, 'Matches BARK directly.'], [20, 23, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [24, 30, 'relation', False, 'Matches BARK directly.'], [36, 39, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [40, 46, 'relation', False, 'Matches BARK directly.']], 'answers': [[0, 7], [16, 23], [32, 39]]}])
+        if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+            self.assertAlmostEqual(topic_matches[0]['score'], 127.84866153010876, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual(topic_matches, [{'document_label': 'q', 'text': 'The dog barked. The dog barked. The dog barked.', 'text_to_match': 'Which cat barked?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 10, 'sentences_start_index': 0, 'sentences_end_index': 11, 'sentences_character_start_index': 0, 'sentences_character_end_index': 47, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 82% similar to CAT.'], [8, 14, 'relation', True, 'Matches BARK directly.'], [20, 23, 'relation', False, 'Has a word embedding that is 82% similar to CAT.'], [24, 30, 'relation', False, 'Matches BARK directly.'], [36, 39, 'relation', False, 'Has a word embedding that is 82% similar to CAT.'], [40, 46, 'relation', False, 'Matches BARK directly.']], 'answers': [[0, 7], [16, 23], [32, 39]]}])
+        else:
+            self.assertAlmostEqual(topic_matches[0]['score'], 126.34484701824243, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual(topic_matches, [{'document_label': 'q', 'text': 'The dog barked. The dog barked. The dog barked.', 'text_to_match': 'Which cat barked?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 10, 'sentences_start_index': 0, 'sentences_end_index': 11, 'sentences_character_start_index': 0, 'sentences_character_end_index': 47, 'score': 0, 'word_infos': [[4, 7, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [8, 14, 'relation', True, 'Matches BARK directly.'], [20, 23, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [24, 30, 'relation', False, 'Matches BARK directly.'], [36, 39, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [40, 46, 'relation', False, 'Matches BARK directly.']], 'answers': [[0, 7], [16, 23], [32, 39]]}])
 
     def test_no_embedding_frequency_threshold_for_governed_question_words_on_child_control(self):
         manager.remove_all_documents()
@@ -198,9 +216,14 @@ class EnglishInitialQuestionsTest(unittest.TestCase):
         topic_matches = manager.topic_match_documents_against("Which big cat?",
         relation_matching_frequency_threshold=1.0, embedding_matching_frequency_threshold=1.0,
         initial_question_word_embedding_match_threshold=0.2, word_embedding_match_threshold=0.2)
-        self.assertAlmostEqual(topic_matches[0]['score'], 126.24642828586148, places=3)
-        topic_matches[0]['score'] = 0
-        self.assertEqual(topic_matches, [{'document_label': 'q', 'text': 'A big dog. A big dog. A big dog.', 'text_to_match': 'Which big cat?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 10, 'sentences_start_index': 0, 'sentences_end_index': 11, 'sentences_character_start_index': 0, 'sentences_character_end_index': 32, 'score': 0, 'word_infos': [[2, 5, 'relation', False, 'Matches BIG directly.'], [6, 9, 'relation', True, 'Has a word embedding that is 80% similar to CAT.'], [13, 16, 'relation', False, 'Matches BIG directly.'], [17, 20, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [24, 27, 'relation', False, 'Matches BIG directly.'], [28, 31, 'relation', False, 'Has a word embedding that is 80% similar to CAT.']], 'answers': [[0, 9], [11, 20], [22, 31]]}])
+        if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+            self.assertAlmostEqual(topic_matches[0]['score'], 127.75024279772781, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual(topic_matches, [{'document_label': 'q', 'text': 'A big dog. A big dog. A big dog.', 'text_to_match': 'Which big cat?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 10, 'sentences_start_index': 0, 'sentences_end_index': 11, 'sentences_character_start_index': 0, 'sentences_character_end_index': 32, 'score': 0, 'word_infos': [[2, 5, 'relation', False, 'Matches BIG directly.'], [6, 9, 'relation', True, 'Has a word embedding that is 82% similar to CAT.'], [13, 16, 'relation', False, 'Matches BIG directly.'], [17, 20, 'relation', False, 'Has a word embedding that is 82% similar to CAT.'], [24, 27, 'relation', False, 'Matches BIG directly.'], [28, 31, 'relation', False, 'Has a word embedding that is 82% similar to CAT.']], 'answers': [[0, 9], [11, 20], [22, 31]]}])
+        else:
+            self.assertAlmostEqual(topic_matches[0]['score'], 126.24642828586148, places=3)
+            topic_matches[0]['score'] = 0
+            self.assertEqual(topic_matches, [{'document_label': 'q', 'text': 'A big dog. A big dog. A big dog.', 'text_to_match': 'Which big cat?', 'rank': '1', 'index_within_document': 2, 'subword_index': None, 'start_index': 1, 'end_index': 10, 'sentences_start_index': 0, 'sentences_end_index': 11, 'sentences_character_start_index': 0, 'sentences_character_end_index': 32, 'score': 0, 'word_infos': [[2, 5, 'relation', False, 'Matches BIG directly.'], [6, 9, 'relation', True, 'Has a word embedding that is 80% similar to CAT.'], [13, 16, 'relation', False, 'Matches BIG directly.'], [17, 20, 'relation', False, 'Has a word embedding that is 80% similar to CAT.'], [24, 27, 'relation', False, 'Matches BIG directly.'], [28, 31, 'relation', False, 'Has a word embedding that is 80% similar to CAT.']], 'answers': [[0, 9], [11, 20], [22, 31]]}])
 
     def test_no_embedding_frequency_threshold_for_governed_question_words_on_parent_control(self):
         manager.remove_all_documents()

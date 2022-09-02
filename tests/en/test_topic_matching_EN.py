@@ -28,7 +28,10 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                                                               relation_matching_frequency_threshold=0.0,
                                                               embedding_matching_frequency_threshold=0.0,
                                                               use_frequency_factor=use_frequency_factor)
-        self.assertEqual(int(topic_matches[0]['score']), highest_score)
+        if type(highest_score) == list:
+            self.assertIn(int(topic_matches[0]['score']), highest_score)
+        else:
+            self.assertEqual(int(topic_matches[0]['score']), highest_score)
 
     def test_no_match(self):
         holmes_manager_coref.remove_all_documents()
@@ -95,15 +98,15 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref)
 
     def test_entity_matching_frequency_factor(self):
-        self._check_equals("My house visited ENTITYGPE", "Peter visited Paris. London. Berlin.", 15,
+        self._check_equals("My house visited ENTITYGPE", "Peter visited Paris. Somebody lived in London. Somebody lived in Berlin.", 15,
                            holmes_manager_coref)
 
     def test_entity_embedding_matching(self):
-        self._check_equals("My friend visited ENTITYGPE", "Peter visited London", 57,
+        self._check_equals("My friend visited ENTITYGPE", "Peter visited London", [56, 57],
                            holmes_manager_coref)
 
     def test_entity_embedding_matching_frequency_factor(self):
-        self._check_equals("My friend visited ENTITYGPE", "Peter visited Paris. London. Berlin.", 32,
+        self._check_equals("My friend visited ENTITYGPE", "Peter visited Paris. Somebody lived in London. Somebody lived in Berlin.", [31, 32],
                            holmes_manager_coref)
 
     def test_entitynoun_matching(self):
@@ -200,7 +203,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref)
 
     def test_embedding_matching_not_root(self):
-        self._check_equals("I saw a king", "Somebody saw a queen", 15,
+        self._check_equals("I saw a king", "Somebody saw a queen", [14, 15],
                            holmes_manager_coref)
 
     def test_embedding_matching_root_overall_similarity_too_low(self):
@@ -243,7 +246,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref)
 
     def test_reverse_only_parent_lemma_twoway(self):
-        self._check_equals("The donkey has a roof", "The donkey has a house", 47,
+        self._check_equals("The donkey has a roof", "The donkey has a house", [46, 47],
                            holmes_manager_coref)
 
     def test_reverse_only_parent_lemma_threeway_control(self):
@@ -251,7 +254,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref)
 
     def test_reverse_only_parent_lemma_twoway_control(self):
-        self._check_equals("The donkey paints a roof", "The donkey paints a house", 58,
+        self._check_equals("The donkey paints a roof", "The donkey paints a house", [56, 58],
                            holmes_manager_coref)
 
     def test_reverse_only_parent_lemma_twoway_control_no_embedding_based_match(self):
@@ -271,11 +274,11 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref)
 
     def test_reverse_matching_noun_no_coreference(self):
-        self._check_equals("A car with an engine", "An automobile with an engine", 51,
+        self._check_equals("A car with an engine", "An automobile with an engine", [50, 51],
                            holmes_manager_coref)
 
     def test_reverse_matching_noun_no_coreference_frequency_factor(self):
-        self._check_equals("A car with an engine", "An automobile with an engine. An engine. An engine.", 28,
+        self._check_equals("A car with an engine", "An automobile with an engine. An engine. An engine.", [27, 28],
                            holmes_manager_coref)
 
     def test_reverse_matching_noun_no_coreference_control_no_embeddings(self):
@@ -287,7 +290,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref, word_embedding_match_threshold=1.0)
 
     def test_forward_matching_noun_entity_governor_match(self):
-        self._check_equals("An ENTITYPERSON with a car", "Richard Hudson with a vehicle", 23,
+        self._check_equals("An ENTITYPERSON with a car", "Richard Hudson with a vehicle", [23, 24],
                            holmes_manager_coref)
 
     def test_forward_matching_noun_entity_governor_no_match(self):
@@ -414,7 +417,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                                                                            single_word_any_tag_score=5,
                                                                            relation_matching_frequency_threshold=0.0, embedding_matching_frequency_threshold=0.0,
                                                                            use_frequency_factor=False)
-        self.assertEqual(int(topic_matches[0]['score']), 51)
+        self.assertIn(int(topic_matches[0]['score']), [50, 51])
 
     def test_reverse_matching_suppressed_with_embedding_reverse_matching_child(self):
         holmes_manager_coref.remove_all_documents()
@@ -438,7 +441,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                                                                            single_word_any_tag_score=5,
                                                                            relation_matching_frequency_threshold=0.0, embedding_matching_frequency_threshold=0.0,
                                                                            use_frequency_factor=False)
-        self.assertEqual(int(topic_matches[0]['score']), 25)
+        self.assertIn(int(topic_matches[0]['score']), [24, 25])
 
     def test_entity_matching_suppressed_with_relation_matching_for_governor(self):
         holmes_manager_coref.remove_all_documents()
@@ -490,7 +493,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
 
     def test_reverse_matching_noun_coreference_on_governor(self):
         self._check_equals("A car with an engine", "I saw an automobile. I saw it with an engine",
-                           50,
+                           [50, 51],
                            holmes_manager_coref)
 
     def test_reverse_matching_noun_coreference_on_governor_control_no_embeddings(self):
@@ -505,7 +508,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
 
     def test_reverse_matching_noun_coreference_on_governed(self):
         self._check_equals(
-            "An engine with a car", "I saw an automobile. I saw the engine with it", 25,
+            "An engine with a car", "I saw an automobile. I saw the engine with it", [24, 25],
             holmes_manager_coref)
 
     def test_reverse_matching_noun_coreference_on_governed_control_no_embeddings(self):

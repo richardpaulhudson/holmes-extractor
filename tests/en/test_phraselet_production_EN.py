@@ -140,8 +140,8 @@ class EnglishPhraseletProductionTest(unittest.TestCase):
 
     
     def test_multiword_class_entry_in_ontology(self):
-        self._check_equals(ontology_holmes_manager, "A big cat creature",
-                           ['governor-adjective: animal-big', 'word: animal'])
+        self._check_equals(ontology_holmes_manager, "A small cat creature",
+                           ['governor-adjective: animal-small', 'word: animal'])
 
     
     def test_individual_entry_in_ontology(self):
@@ -160,8 +160,8 @@ class EnglishPhraseletProductionTest(unittest.TestCase):
 
     
     def test_multiword_class_entry_in_ontology_no_hypernym_replacement(self):
-        self._check_equals(ontology_holmes_manager, "A big cat creature",
-                           ['governor-adjective: cat creature-big', 'word: cat creature'], False)
+        self._check_equals(ontology_holmes_manager, "A small cat creature",
+                           ['governor-adjective: cat creature-small', 'word: cat creature'], False)
 
     
     def test_individual_entry_in_ontology_no_hypernym_replacement(self):
@@ -211,8 +211,8 @@ class EnglishPhraseletProductionTest(unittest.TestCase):
 
     
     def test_multiword_class_entry_in_ontology_symmetric_ontology(self):
-        self._check_equals(symmetric_ontology_nocoref_holmes_manager, "A big cat creature",
-                           ['governor-adjective: animal-big', 'word: animal'])
+        self._check_equals(symmetric_ontology_nocoref_holmes_manager, "A small cat creature",
+                           ['governor-adjective: animal-small', 'word: animal'])
 
     
     def test_individual_entry_in_ontology_symmetric_ontology(self):
@@ -231,8 +231,8 @@ class EnglishPhraseletProductionTest(unittest.TestCase):
 
     
     def test_multiword_class_entry_in_ontology_no_hypernym_replacement_symmetric_ontology(self):
-        self._check_equals(symmetric_ontology_nocoref_holmes_manager, "A big cat creature",
-                           ['governor-adjective: cat creature-big', 'word: cat creature'], False)
+        self._check_equals(symmetric_ontology_nocoref_holmes_manager, "A small cat creature",
+                           ['governor-adjective: cat creature-small', 'word: cat creature'], False)
 
     
     def test_individual_entry_in_ontology_no_hypernym_replacement_symmetric_ontology(self):

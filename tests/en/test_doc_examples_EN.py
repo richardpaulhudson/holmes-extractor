@@ -1,10 +1,17 @@
+import os
 import unittest
 import holmes_extractor as holmes
 
-holmes_manager = holmes.Manager(model="en_core_web_lg", number_of_workers=1)
+script_directory = os.path.dirname(os.path.realpath(__file__))
+ontology = holmes.Ontology(
+    os.sep.join((script_directory, "blog.owl")))
+holmes_manager = holmes.Manager(model="en_core_web_trf", number_of_workers=1, ontology=ontology)
 holmes_manager.register_search_phrase("A big dog chases a cat")
 holmes_manager.register_search_phrase("An ENTITYPERSON goes into town")
 holmes_manager.register_search_phrase("A company gives permission to publish something")
+holmes_manager.register_search_phrase("An ENTITYPERSON visits an ENTITYGPE")
+holmes_manager.register_search_phrase("An ENTITYORG takes over an ENTITYORG")
+
 
 
 class EnglishDocumentationExamplesTest(unittest.TestCase):
@@ -253,3 +260,31 @@ class EnglishDocumentationExamplesTest(unittest.TestCase):
         )
         self.assertEqual(len(matches), 1)
         self.assertEqual(matches[0]["word_matches"][0]["extracted_word"], "astrazeneca")
+
+
+    def test_blog_example_1(self):
+        matches = holmes_manager.match(
+            document_text="Richard Hudson visited Berlin"
+        )
+        self.assertEqual(len(matches), 1)
+
+    def test_blog_example_2(self):
+        holmes_manager.remove_all_documents()        
+        holmes_manager.parse_and_register_document("Royal Bank of Scotland announces it intends to acquire Brewin Dolphin", "1")
+        holmes_manager.parse_and_register_document("Chipmaker MaxLinear Inc announced on Thursday it will buy Silicon Motion Technology Corp for nearly $4 billion.", "2")
+        holmes_manager.parse_and_register_document("Last month, cybersecurity company Mandiant was purchased by Alphabet", "3")
+        holmes_manager.parse_and_register_document("The Datto takeover by the company Kaseya", "4")
+        matches = holmes_manager.match()
+        self.assertEqual(len(matches), 4)
+        self.assertEqual([match['word_matches'][0]['document_phrase'] for match in matches], ['Royal Bank', 'Chipmaker MaxLinear Inc', 'Alphabet', 'Kaseya'])
+        self.assertEqual([match['word_matches'][2]['document_phrase'] for match in matches], ['Brewin Dolphin', 'Silicon Motion Technology Corp', 'cybersecurity company Mandiant', 'Datto'])
+
+    def test_blog_example_3(self):
+        holmes_manager.remove_all_documents()
+        holmes_manager.parse_and_register_document("The dog was thinking about whether he wanted to chase the neighbourhood cat.", "1")
+        holmes_manager.parse_and_register_document("The cat kept chasing around and was hoping she wouldn't see a dog anytime soon.", "2")
+        holmes_manager.parse_and_register_document("The children discussed dogs, cats and chasing", "3")
+        topic_matches = holmes_manager.topic_match_documents_against("Increasingly, his life's work appeared to revolve around watching dogs chasing cats.")
+        self.assertEqual([tm['document_label'] for tm in topic_matches], ['1', '3', '2'])
+        self.assertTrue(topic_matches[0]['score'] > topic_matches[1]['score'] * 5)
+        self.assertFalse(topic_matches[1]['score'] > topic_matches[2]['score'] * 2)

@@ -1,10 +1,11 @@
 import unittest
 import holmes_extractor as holmes
 import os
+from packaging import version
 
 script_directory = os.path.dirname(os.path.realpath(__file__))
 ontology = holmes.Ontology(os.sep.join((script_directory,'test_ontology.owl')))
-holmes_manager_coref = holmes.Manager(model='en_core_web_trf', overall_similarity_threshold=0.82,
+holmes_manager_coref = holmes.Manager(model='en_core_web_trf', overall_similarity_threshold=0.75,
         embedding_based_matching_on_root_words=True, ontology=ontology,
         perform_coreference_resolution=False, number_of_workers=2)
 holmes_manager_coref.register_search_phrase('A dog chases a cat')
@@ -21,7 +22,7 @@ holmes_manager_coref.register_search_phrase("Somebody believes strongly")
 holmes_manager_coref.register_search_phrase("A strong attraction")
 symmetric_ontology = holmes.Ontology(os.sep.join((script_directory,'test_ontology.owl')),
         symmetric_matching=True)
-second_holmes_manager_coref = holmes.Manager(model='en_core_web_trf', overall_similarity_threshold=0.82,
+second_holmes_manager_coref = holmes.Manager(model='en_core_web_trf', overall_similarity_threshold=0.75,
         embedding_based_matching_on_root_words=False, ontology=symmetric_ontology,
         perform_coreference_resolution=False, number_of_workers=1)
 second_holmes_manager_coref.register_search_phrase('A narcissistic king')
@@ -65,8 +66,12 @@ class WordMatchingTest(unittest.TestCase):
         text_matches = holmes_manager_coref.match(document_text='The queen woke up')
         self.assertEqual(len(text_matches), 1)
         self.assertEqual(text_matches[0]['word_matches'][0]['match_type'], 'embedding')
-        self.assertEqual(text_matches[0]['word_matches'][0]['explanation'],
-                "Has a word embedding that is 72% similar to KING.")
+        if version.parse(holmes_manager_coref.nlp.meta["version"]) >= version.parse("3.4.0"):
+                self.assertEqual(text_matches[0]['word_matches'][0]['explanation'],
+                        "Has a word embedding that is 61% similar to KING.")
+        else:
+                self.assertEqual(text_matches[0]['word_matches'][0]['explanation'],
+                        "Has a word embedding that is 72% similar to KING.")
         self.assertEqual(text_matches[0]['word_matches'][1]['explanation'],
                 "Matches WAKE UP directly.")
 
@@ -330,5 +335,9 @@ class WordMatchingTest(unittest.TestCase):
                 document_text='Richard Hudson made an announcement')
         self.assertEqual(len(text_matches), 1)
         self.assertEqual(text_matches[0]['word_matches'][0]['match_type'], 'entity_embedding')
-        self.assertEqual(text_matches[0]['word_matches'][0]['explanation'],
-                "Has an entity label that is 55% similar to the word embedding corresponding to MAN.")
+        if version.parse(second_holmes_manager_coref.nlp.meta["version"]) >= version.parse("3.4.0"):
+                self.assertEqual(text_matches[0]['word_matches'][0]['explanation'],
+                        "Has an entity label that is 58% similar to the word embedding corresponding to MAN.")
+        else:
+                self.assertEqual(text_matches[0]['word_matches'][0]['explanation'],
+                        "Has an entity label that is 55% similar to the word embedding corresponding to MAN.")

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2022/6/holmes-test#"
+     xml:base="http://www.semanticweb.org/ontologies/2022/6/holmes-test"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2022/6/holmes-test"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2022/6/holmes-test#acquire -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2022/6/holmes-test#acquire">
+        <owl:equivalentClass rdf:resource="http://www.semanticweb.org/ontologies/2022/6/holmes-test#buy"/>
+        <owl:equivalentClass rdf:resource="http://www.semanticweb.org/ontologies/2022/6/holmes-test#take_over"/>
+        <owl:equivalentClass rdf:resource="http://www.semanticweb.org/ontologies/2022/6/holmes-test#takeover"/>
+	<owl:equivalentClass rdf:resource="http://www.semanticweb.org/ontologies/2022/6/holmes-test#purchase"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2022/6/holmes-test#buy -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2022/6/holmes-test#buy"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2022/6/holmes-test#take_over -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2022/6/holmes-test#take_over"/>
+    
+
+
+    <!-- http://www.semanticweb.org/ontologies/2022/6/holmes-test#takeover -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2022/6/holmes-test#takeover"/>
+
+
+
+    <!-- http://www.semanticweb.org/ontologies/2022/6/holmes-test#purchase -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2022/6/holmes-test#purchase"/>
+</rdf:RDF>
