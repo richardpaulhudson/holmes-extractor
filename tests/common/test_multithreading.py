@@ -13,9 +13,20 @@ ontology = holmes.Ontology(os.sep.join((script_directory, "test_ontology.owl")))
 manager = holmes.Manager(
     "en_core_web_trf",
     ontology=ontology,
+    overall_similarity_threshold=0.90,
+    number_of_workers=2,
+)
+LATER_SPACY_VERSION = version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0")
+if LATER_SPACY_VERSION:
+    ontology = holmes.Ontology(os.sep.join((script_directory, "test_ontology.owl")))
+    manager = holmes.Manager(
+    "en_core_web_trf",
+    ontology=ontology,
     overall_similarity_threshold=0.85,
     number_of_workers=2,
 )
+    
+
 manager.parse_and_register_document("The hungry lion chased the angry gnu.", "lion")
 manager.parse_and_register_document("The hungry tiger chased the angry gnu.", "tiger")
 manager.parse_and_register_document(
@@ -85,7 +96,7 @@ class MultithreadingTest(unittest.TestCase):
             ):
                 output[0]["sentences_within_document"] = "I saw a foal."
             if first_argument == "A tiger chases a gnu":
-                if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+                if LATER_SPACY_VERSION:
                     self.assertAlmostEqual(
                         float(output[1]["overall_similarity_measure"]), 0.89362134, places=3
                     )
@@ -780,11 +791,9 @@ class MultithreadingTest(unittest.TestCase):
                 },
             ]
         
-        if version.parse(manager.nlp.meta["version"]) >= version.parse("3.4.0"):
+        if LATER_SPACY_VERSION:
             expected_output[1]["word_matches"][0]["explanation"] = "Has a word embedding that is 71% similar to TIGER."
-        self._inner_match_against_documents(
-            "A tiger chases a gnu", expected_output
-        )
+        self._inner_match_against_documents("A tiger chases a gnu", expected_output)
 
     def test_multithreading_matching_against_documents_ontology_matching(self):
         self._inner_match_against_documents(

@@ -287,4 +287,4 @@ class EnglishDocumentationExamplesTest(unittest.TestCase):
         topic_matches = holmes_manager.topic_match_documents_against("Increasingly, his life's work appeared to revolve around watching dogs chasing cats.")
         self.assertEqual(len(topic_matches), 3)
         self.assertEqual(topic_matches[0]['document_label'], '1')
-        self.assertTrue(topic_matches[0]['score'] > topic_matches[1]['score'] * 5)
+        self.assertTrue(topic_matches[0]['score'] > topic_matches[1]['score'] * 2)
