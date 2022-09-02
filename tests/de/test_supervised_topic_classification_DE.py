@@ -178,7 +178,10 @@ class GermanSupervisedTopicClassificationTest(unittest.TestCase):
         self.assertEqual(freq["intcompound: löw-maßnahm"], {"Tiere": 1})
         self.assertEqual(freq["intcompound: löw-raket"], {"Tiere": 1})
         self.assertEqual(freq["verb-nom: fressen-löw"], {"Tiere": 1})
-        self.assertEqual(freq["word: raketenlöwe"], {"Tiere": 1})
+        if "word: raketenlöwe" in freq:
+            self.assertEqual(freq["word: raketenlöwe"], {"Tiere": 1})
+        else:
+            self.assertEqual(freq["word: raketenlöw"], {"Tiere": 1})
         self.assertEqual(
             freq["intcompound: extraktion-information/intcompound: maßnahm-extraktion"],
             {"Tiere": 1},

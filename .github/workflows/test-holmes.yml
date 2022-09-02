@@ -9,9 +9,13 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
         python_version: ['3.6', '3.7', '3.8', '3.9', '3.10']
-        spacy_version: ['3.3.0']
+        spacy_version: ['3.4.1']
         click_version: ['8.0.1']
         include:
+          - os: 'ubuntu-latest'
+            python_version: '3.9'
+            spacy_version: '3.3.1'
+            click_version: '8.0.1'
           - os: 'ubuntu-latest'
             python_version: '3.9'
             spacy_version: '3.2.4'

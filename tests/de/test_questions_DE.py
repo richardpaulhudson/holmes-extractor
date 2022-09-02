@@ -78,13 +78,13 @@ class GermanInitialQuestionsTest(unittest.TestCase):
 
     @unittest.skipIf(manager.nlp.meta['version'] == '3.2.0', 'Version fluke')
     def test_check_wen_positive_case(self):
-        self._check_equals('Wen sah das Gebäude?', 'Das Gebäude sah die Person', 54, 16, 26, alternative_highest_score=104)
+        self._check_equals('Wen sah der Löwe?', 'Der Löwe sah die Person', 54, 13, 23, alternative_highest_score=104)
 
     def test_check_wen_wrong_syntax(self):
-        self._check_equals('Wen sah das Gebäude?', 'Das Gebäude sah das Gebäude', 34, None, None)
+        self._check_equals('Wen sah der Löwe?', 'Der Löwe sah das Gebäude', 34, None, None)
 
     def test_check_was_acc(self):
-        self._check_equals('Was sah das Gebäude?', 'Das Gebäude sah das Gebäude', 104, 16, 27)
+        self._check_equals('Was sah der Löwe?', 'Der Löwe sah das Gebäude', 104, 13, 24)
 
     def test_check_wem_positive_case(self):
         self._check_equals('wem gibst du es?', 'Ich gebe es der Person', 45, 12, 22)
@@ -118,7 +118,7 @@ class GermanInitialQuestionsTest(unittest.TestCase):
 
     @unittest.skipIf(manager.nlp.meta['version'] == '3.2.0', 'Version fluke')
     def test_check_wann_noun(self):
-        self._check_equals('Wann fährst du?', 'Ich fahre nächste Woche', 45, 10, 23)
+        self._check_equals('Wann fährst du?', 'Ich fahre nächste Woche nach Deutschland', 45, 10, 23)
 
     def test_check_wann_preposition(self):
         self._check_equals('Wann fährst du?', 'Ich fahre in zwei Wochen', 45, 10, 24)

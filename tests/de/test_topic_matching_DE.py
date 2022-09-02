@@ -218,7 +218,7 @@ class GermanTopicMatchingTest(unittest.TestCase):
                            holmes_manager)
 
     def test_subword_matches_verbal_expression(self):
-        self._check_equals("Katzenjagen",
+        self._check_equals("Ein Katzenjagen",
                            "Ein Hund jagt eine Katze", 29,
                            holmes_manager)
 

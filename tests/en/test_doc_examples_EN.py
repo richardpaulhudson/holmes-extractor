@@ -285,6 +285,6 @@ class EnglishDocumentationExamplesTest(unittest.TestCase):
         holmes_manager.parse_and_register_document("The cat kept chasing around and was hoping she wouldn't see a dog anytime soon.", "2")
         holmes_manager.parse_and_register_document("The children discussed dogs, cats and chasing", "3")
         topic_matches = holmes_manager.topic_match_documents_against("Increasingly, his life's work appeared to revolve around watching dogs chasing cats.")
-        self.assertEqual([tm['document_label'] for tm in topic_matches], ['1', '3', '2'])
+        self.assertEqual(len(topic_matches), 3)
+        self.assertEqual(topic_matches[0]['document_label'], '1')
         self.assertTrue(topic_matches[0]['score'] > topic_matches[1]['score'] * 5)
-        self.assertFalse(topic_matches[1]['score'] > topic_matches[2]['score'] * 2)

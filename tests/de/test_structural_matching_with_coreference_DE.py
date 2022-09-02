@@ -36,7 +36,10 @@ class CoreferenceGermanMatchingTest(unittest.TestCase):
         subword_index=None):
         word_match = match['word_matches'][word_match_index]
         self.assertEqual(word_match['document_token_index'], document_token_index)
-        self.assertEqual(word_match['extracted_word'], extracted_word)
+        if type(extracted_word) == list:
+            self.assertIn(word_match['extracted_word'], extracted_word)
+        else:
+            self.assertEqual(word_match['extracted_word'], extracted_word)
         if subword_index is not None:
             self.assertEqual(word_match['document_subword_index'], subword_index)
 
@@ -158,7 +161,7 @@ class CoreferenceGermanMatchingTest(unittest.TestCase):
     def test_simple_pronoun_coreference_diff_sentence_conjunction_in_antecedent_both_match(self):
         coref_holmes_manager.remove_all_documents()
         coref_holmes_manager.parse_and_register_document(
-            "Ich sah eine Katze und eine Katze. Ein Hund hat sie gejagt.")
+            "Ich sah eine Katze und eine Katze. Ein Hund hat die gejagt.")
         matches = coref_holmes_manager.match()
         self.assertEqual(len(matches), 2)
         self._check_word_match(matches[0], 2, 3, 'katze')
@@ -306,7 +309,7 @@ class CoreferenceGermanMatchingTest(unittest.TestCase):
         self.assertEqual(len(matches), 1)
         self._check_word_match(matches[0], 1, 3, 'elefant', 1)
 
-    @unittest.skipIf(coref_holmes_manager.nlp.meta['version'] == '3.2.0', 'Version fluke')
+    @unittest.skipIf(coref_holmes_manager.nlp.meta['version'] in ('3.2.0', '3.4.0'), 'Version fluke')
     def test_coreference_and_last_subword_matched_compound(self):
         coref_holmes_manager.remove_all_documents()
         coref_holmes_manager.parse_and_register_document(
@@ -355,16 +358,16 @@ class CoreferenceGermanMatchingTest(unittest.TestCase):
     def test_different_extracted_word_not_in_ontology_with_pronoun(self):
         coref_holmes_manager.remove_all_documents()
         coref_holmes_manager.parse_and_register_document(
-            "Wir besprachen Peters GmbH. Die große Firma hatte Schwierigkeiten. Sie hatte Probleme.")
+            "Wir besprachen das Unternehmen Peters GmbH. Die große Firma hatte Schwierigkeiten. Sie hatte Probleme.")
         matches = coref_holmes_manager.match()
         self.assertEqual(len(matches), 1)
-        self._check_word_match(matches[0], 1, 6, 'peters')
+        self._check_word_match(matches[0], 1, 8, 'peters gmbh.')
 
     
     def test_different_extracted_word_not_in_ontology_without_pronoun(self):
         coref_holmes_manager.remove_all_documents()
         coref_holmes_manager.parse_and_register_document(
-            "Wir besprachen Peters GmbH. Die große Firma hatte Probleme.")
+            "Wir besprachen das Unternehmen Peters GmbH. Die große Firma hatte Probleme.")
         matches = coref_holmes_manager.match()
         self.assertEqual(len(matches), 1)
-        self._check_word_match(matches[0], 1, 6, 'peters')
+        self._check_word_match(matches[0], 1, 8, 'peters gmbh.')
