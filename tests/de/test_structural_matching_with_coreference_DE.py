@@ -361,7 +361,7 @@ class CoreferenceGermanMatchingTest(unittest.TestCase):
             "Wir besprachen das Unternehmen Peters GmbH. Die große Firma hatte Schwierigkeiten. Sie hatte Probleme.")
         matches = coref_holmes_manager.match()
         self.assertEqual(len(matches), 1)
-        self._check_word_match(matches[0], 1, 8, 'peters gmbh.')
+        self._check_word_match(matches[0], 1, 8, ['peters', 'peters gmbh.'])
 
     
     def test_different_extracted_word_not_in_ontology_without_pronoun(self):
@@ -370,4 +370,4 @@ class CoreferenceGermanMatchingTest(unittest.TestCase):
             "Wir besprachen das Unternehmen Peters GmbH. Die große Firma hatte Probleme.")
         matches = coref_holmes_manager.match()
         self.assertEqual(len(matches), 1)
-        self._check_word_match(matches[0], 1, 8, 'peters gmbh.')
+        self._check_word_match(matches[0], 1, 8, ['peters', 'peters gmbh.'])
