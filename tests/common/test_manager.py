@@ -1,4 +1,5 @@
 import unittest
+from packaging import version
 import holmes_extractor as holmes
 from holmes_extractor.errors import NoDocumentError
 
@@ -131,7 +132,7 @@ class ManagerTest(unittest.TestCase):
         self.assertEqual(str(next(docs)), 'document1')
         self.assertEqual(str(next(docs)), 'document2')
 
-    
+    @unittest.skipIf(version.parse(holmes_manager.nlp.meta["version"]) < version.parse("3.3.0"), 'spaCy feature not supported')
     def test_bespoke_entity_labels(self):
         tmp_holmes_manager = holmes.Manager("en_core_web_lg", entity_labels_to_corresponding_lexemes={"SQUIRREL": "squirrel"}, overall_similarity_threshold=0.99)
         config = {"spans_key": None, "annotate_ents": True, "overwrite": False}
