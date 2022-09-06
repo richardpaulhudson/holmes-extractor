@@ -252,7 +252,7 @@ demonstration chatbot console:
 
 ```
 import holmes_extractor as holmes
-holmes_manager = holmes.Manager(model='en_core_web_lg', number_of_workers=1)
+holmes_manager = holmes.Manager(model='en_core_web_trf', number_of_workers=1)
 holmes_manager.register_search_phrase('A big dog chases a cat')
 holmes_manager.start_chatbot_mode_console()
 ```
