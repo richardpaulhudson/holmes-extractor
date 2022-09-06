@@ -1587,12 +1587,14 @@ class SemanticAnalyzer(ABC):
             pointer += 1
         return return_list if len(return_list) > 0 else None
 
-    def get_entity_label_to_vector_dict(self) -> Dict[str, List[Floats1d]]:
+    def get_entity_label_to_vector_dict(
+        self, entity_labels_to_corresponding_lexemes: Dict[str, str]
+    ) -> Dict[str, List[Floats1d]]:
         return {
             label: self.vectors_nlp.vocab[
-                self.entity_labels_to_corresponding_lexemes[label]
+                entity_labels_to_corresponding_lexemes[label]
             ].vector
-            for label in self.entity_labels_to_corresponding_lexemes
+            for label in entity_labels_to_corresponding_lexemes
         }
 
     @abstractmethod

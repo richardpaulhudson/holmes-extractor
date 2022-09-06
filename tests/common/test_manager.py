@@ -130,3 +130,31 @@ class ManagerTest(unittest.TestCase):
         docs = lg_holmes_manager.nlp.pipe(['document1', 'document2'], n_process=2)
         self.assertEqual(str(next(docs)), 'document1')
         self.assertEqual(str(next(docs)), 'document2')
+
+    
+    def test_bespoke_entity_labels(self):
+        tmp_holmes_manager = holmes.Manager("en_core_web_lg", entity_labels_to_corresponding_lexemes={"SQUIRREL": "squirrel"}, overall_similarity_threshold=0.99)
+        config = {"spans_key": None, "annotate_ents": True, "overwrite": False}
+        ruler = tmp_holmes_manager.nlp.add_pipe("span_ruler", config=config)
+        patterns = [{"label": "SQUIRREL", "pattern": "ice cream"}]
+        ruler.add_patterns(patterns)
+        tmp_holmes_manager.parse_and_register_document("We ate some ice cream")
+        tmp_holmes_manager.register_search_phrase("Somebody eats squirrels")
+        matches = tmp_holmes_manager.match()
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0]["word_matches"][-1]["explanation"], "Has an entity label that is 100% similar to the word embedding corresponding to SQUIRREL.")
+
+
+    def test_retokenization(self):
+        doc = holmes_manager.nlp("This is a test")
+        with doc.retokenize() as retokenizer:
+            retokenizer.merge(doc[0:4], {'POS': 'NOUN'})
+        coreferee_ext = holmes_manager.nlp.get_pipe("coreferee")
+        holmes_ext = holmes_manager.nlp.get_pipe("holmes")
+        coreferee_ext(doc)
+        holmes_ext(doc)
+        holmes_manager.remove_all_documents()
+        holmes_manager.register_serialized_document(doc.to_bytes(), 'test')
+        matches = holmes_manager.match(search_phrase_text="ENTITYNOUN")
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0]["word_matches"][0]["document_word"], "this is a test")

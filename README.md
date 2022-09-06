@@ -69,7 +69,10 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
         `Manager.match()`](#dictionary)
     -   [6.8 Dictionary returned from
         `Manager.topic_match_documents_against()`](#topic-match-dictionary)
--   [7 A note on the license](#a-note-on-the-license)
+-   [7 Non-standard interaction with spaCy models](#non-standard-interaction-with-spacy-models)
+    -   [7.1 General comments](#general-comments-2)
+    -   [7.2 Using bespoke named-entity recognition](#using-bespoke-named-entity-recognition)
+    -   [7.3 Using retokenized documents](#using-retokenized-documents)
 -   [8 Information for developers](#information-for-developers)
     -   [8.1 How it works](#how-it-works)
         - [8.1.1 Structural matching (chatbot and structural extraction)](#how-it-works-structural-matching)
@@ -95,6 +98,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
         -   [8.4.7 Version 4.0.1](#version-401)
         -   [8.4.8 Version 4.0.2](#version-402)
         -   [8.4.9 Version 4.0.3](#version-403)
+        -   [8.4.10 Version 4.1.0](#version-410)
 
 <a id="introduction"></a>
 ### 1. Introduction
@@ -103,7 +107,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
 #### 1.1 The basic idea
 
 **Holmes** is a Python 3 library (v3.6—v3.10) running on top of
-[spaCy](https://spacy.io/) (v3.1—v3.3) that supports a number of use cases
+[spaCy](https://spacy.io/) (v3.1—v3.4) that supports a number of use cases
 involving information extraction from English and German texts. In all use cases, the information
 extraction is based on analysing the semantic relationships expressed by the component parts of
 each sentence:
@@ -1161,7 +1165,7 @@ The interior workings of supervised document classification are explained [here]
 holmes_extractor.Manager(self, model, *, overall_similarity_threshold=1.0,
   embedding_based_matching_on_root_words=False, ontology=None,
   analyze_derivational_morphology=True, perform_coreference_resolution=None,
-  number_of_workers=None, verbose=False)
+  number_of_workers=None, verbose=False, entity_labels_to_corresponding_lexemes=None)
 
 The facade class for the Holmes library.
 
@@ -1188,6 +1192,11 @@ number_of_workers -- the number of worker processes to use, or *None* if the num
   processes should depend on the number of available cores. Defaults to *None*
 verbose -- a boolean value specifying whether multiprocessing messages should be outputted to
   the console. Defaults to *False*
+entity_labels_to_corresponding_lexemes -- a dictionary from entity labels to lexemes, 
+  e.g. {"GPE": "place"} that reflect the meanings of those labels, or *None* if 
+  the standard dictionaries should be used. The standard dictionaries are recommended 
+  unless bespoke entity labels are being used.
+
 ```
 
 ``` {.python}
@@ -1765,12 +1774,41 @@ answers -- an array of arrays with the semantics:
     word.
 ```
 
-<a id="a-note-on-the-license"></a>
-### 7 A note on the license
+-   [7 Non-standard interaction with spaCy models](#)
+    -   [7.1 General comments](#general-comments-2)
+    -   [7.2 Using bespoke named-entity recognition](#using-bespoke-named-entity-recognition)
+    -   [7.3 Using retokenized documents](#using-retokenized-documents)
 
-Earlier versions of Holmes could only be published under a restrictive license because of patent issues. As explained in the
-[introduction](#introduction), this is no longer the case thanks to the generosity of [AstraZeneca](https://www.astrazeneca.com/):
-versions from 4.0.0 onwards are licensed under the MIT license.
+
+<a id="non-standard-interaction-with-spacy-models"></a>
+### 7 Non-standard interaction with spaCy models
+
+<a id="general-comments-2"></a>
+### 7.1 General comments
+
+The [standard spaCy models](https://spacy.io/models/en) are pipelines consisting of multiple components. A central idea behind spaCy is that users can define and train their own pipelines. Holmes, on the other hand, does not generally support bespoke pipelines: it relies on the presence of various features that the standard pipelines generate as well as on the [Coreferee](https://github.com/explosion/Coreferee) library which itself is designed for use with the standard pipelines.
+
+There are, however, certain situations in which the behaviour of the standard spaCy pipelines can be customised in such a way that Holmes still works and which are set out in this section. Note that, when a document is deserialized, Holmes checks that the model name and version that were used to generate the document correspond to the model name and version loaded within the current Holmes manager instance. However, Holmes does not check whether any of the techniques explained in this section have been applied either to the serialized document or to the manager; the user is responsible for avoiding any discrepancies between the two states.
+
+<a id="using-bespoke-named-entity-recognition"></a>
+### 7.2 Using bespoke named-entity recognition
+
+Holmes supports documents with bespoke [named-entity labels](https://spacy.io/api/entityrecognizer): document tokens to which the `label` entity label have been assigned are matched to `ENTITY<label>` identifiers in search phrases as explained in [section 2.3](#named-entity-matching). Because spaCy supports different types of component that assign entity labels to document tokens (e.g. [`EntityRecognizer`]((https://spacy.io/api/entityrecognizer); [`EntityRuler`]((https://spacy.io/api/entityruler)) and such components can also be combined with one another, it was decided not to allow named-entity components to be specified specifically to the Holmes manager. Instead, the user should instantiate a Holmes manager with a standard spaCy model, retrieve the underlying spaCy pipeline as `manager.nlp` and use the 
+[`add_pipe()`](https://spacy.io/api/language#add_pipe) and [`remove_pipe()`](https://spacy.io/api/language#remove_pipe) methods to alter it as required.
+
+When using bespoke entity labels in conjunction with [embedding-based matching](#embedding-based-matching), Holmes requires a dictionary from all labels that can occur to lexemes that correspond to the meaning of those labels. This dictionary is specified using the `entity_labels_to_corresponding_lexemes` parameter when instantiating the manager. To see how this works, look at the standard `entity_labels_to_corresponding_lexemes` definition in the `language_specific_rules.py` file for whichever language you are working with.
+
+<a id="using-retokenized-documents"></a>
+### 7.3 Using retokenized documents
+
+It is possible to redefine the token boundaries and definitions within a spaCy document using the [`Doc.retokenize()`](https://spacy.io/api/doc#retokenize) method. If this feature is used with a Holmes document, the Holmes information referring to the original tokenization will already have been stored on the document object when it was created. Following retokenization, it is therefore necessary to run the document back through Coreferee and Holmes:
+
+```
+coreferee_ext = manager.nlp.get_pipe("coreferee")
+holmes_ext = manager.nlp.get_pipe("holmes")
+coreferee_ext(doc)
+holmes_ext(doc)
+```
 
 <a id="information-for-developers"></a>
 ### 8 Information for developers
@@ -2076,3 +2114,11 @@ installation much faster and more trouble-free.
 ##### 8.4.9 Version 4.0.3
 
 - A new version of rdflib included a method name change that necessitated a change in Holmes.
+
+<a id="version-410"></a>
+##### 8.4.10 Version 4.1.0
+
+- Support was added for spaCy version 3.4.
+- Support was added for [bespoke named-entity labels](#using-bespoke-named-entity-recognition)
+- [Documentation](#non-standard-interaction-with-spacy-models) was added about non-standard interaction with spaCy models.
+

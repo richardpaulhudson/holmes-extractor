@@ -1,4 +1,4 @@
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, cast
 from multiprocessing import Process, Queue, Manager as MultiprocessingManager, cpu_count
 from threading import Lock
 from string import punctuation
@@ -106,6 +106,10 @@ class Manager:
         processes should depend on the number of available cores. Defaults to *None*
     verbose -- a boolean value specifying whether multiprocessing messages should be outputted to
         the console. Defaults to *False*
+    entity_labels_to_corresponding_lexemes -- a dictionary from entity labels to lexemes, 
+        e.g. {"GPE": "place"} that reflect the meanings of those labels, or *None* if 
+        the standard dictionaries should be used. The standard dictionaries are recommended 
+        unless bespoke entity labels are being used.
     """
 
     def __init__(
@@ -119,7 +123,8 @@ class Manager:
         perform_coreference_resolution: bool = True,
         use_reverse_dependency_matching: bool = True,
         number_of_workers: int = None,
-        verbose: bool = False
+        verbose: bool = False,
+        entity_labels_to_corresponding_lexemes: Optional[Dict[str, str]] = None
     ):
         self.verbose = verbose
         self.nlp = get_nlp(model)
@@ -143,11 +148,21 @@ class Manager:
                 "be False"
             )
         self.analyze_derivational_morphology = analyze_derivational_morphology
-        self.entity_label_to_vector_dict = (
-            self.semantic_analyzer.get_entity_label_to_vector_dict()
-            if self.semantic_analyzer.model_supports_embeddings()
-            else {}
-        )
+        if self.semantic_analyzer.model_supports_embeddings():
+            if entity_labels_to_corresponding_lexemes is None:
+                self.entity_label_to_vector_dict = (
+                    self.semantic_analyzer.get_entity_label_to_vector_dict(
+                        self.semantic_analyzer.entity_labels_to_corresponding_lexemes
+                    )
+                )
+            else:
+                self.entity_label_to_vector_dict = (
+                    self.semantic_analyzer.get_entity_label_to_vector_dict(
+                        cast(Dict[str, str], entity_labels_to_corresponding_lexemes)
+                    )
+                )
+        else:
+            self.entity_label_to_vector_dict = {}
         self.perform_coreference_resolution = perform_coreference_resolution
         self.semantic_matching_helper = (
             SemanticMatchingHelperFactory().semantic_matching_helper(
@@ -687,7 +702,9 @@ class Manager:
         single_word_score: int = 50,
         single_word_any_tag_score: int = 20,
         initial_question_word_answer_score: int = 600,
-        initial_question_word_behaviour: Literal["process", "exclusive", "ignore"] = "process",
+        initial_question_word_behaviour: Literal[
+            "process", "exclusive", "ignore"
+        ] = "process",
         different_match_cutoff_score: int = 15,
         overlapping_relation_multiplier: float = 1.5,
         embedding_penalty: float = 0.6,
@@ -709,7 +726,7 @@ class Manager:
         text_to_match -- the text to match against the loaded documents.
         use_frequency_factor -- *True* if scores should be multiplied by a factor between 0 and 1
             expressing how rare the words matching each phraselet are in the corpus. Note that,
-            even if this parameter is set to *False*, the factors are still calculated as they 
+            even if this parameter is set to *False*, the factors are still calculated as they
             are required for determining which relation and embedding matches should be attempted.
         maximum_activation_distance -- the number of words it takes for a previous phraselet
             activation to reduce to zero when the library is reading through a document.
@@ -728,7 +745,7 @@ class Manager:
             matched to an answering phrase.
         initial_question_word_behaviour -- 'process' if a question word in the sentence
             constituent at the beginning of *text_to_match* is to be matched to document phrases
-            that answer it and to matching question words; 'exclusive' if only topic matches that 
+            that answer it and to matching question words; 'exclusive' if only topic matches that
             answer questions are to be permitted; 'ignore' if question words are to be ignored.
         different_match_cutoff_score -- the activation threshold under which topic matches are
             separated from one another. Note that the default value will probably be too low if
