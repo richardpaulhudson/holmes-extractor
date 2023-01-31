@@ -1,7 +1,7 @@
 name: Holmes Matrix Test
 on: 
   workflow_dispatch:
-  push:
+  pull-request:
 
 jobs:
   test-holmes:
@@ -12,6 +12,10 @@ jobs:
         spacy_version: ['3.4.1']
         click_version: ['8.0.1']
         include:
+          - os: 'ubuntu-latest'
+            python_version: '3.9'
+            spacy_version: '3.5.0'
+            click_version: '8.0.1'
           - os: 'ubuntu-latest'
             python_version: '3.9'
             spacy_version: '3.3.1'
