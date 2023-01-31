@@ -1,6 +1,6 @@
 Holmes
 ======
-Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI</a>
+Author: [Richard Paul Hudson](https://github.com/richardpaulhudson)
 
 -   [1. Introduction](#introduction)
     -   [1.1 The basic idea](#the-basic-idea)
@@ -99,6 +99,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
         -   [8.4.8 Version 4.0.2](#version-402)
         -   [8.4.9 Version 4.0.3](#version-403)
         -   [8.4.10 Version 4.1.0](#version-410)
+        -   [8.4.11 Version 4.2.0](#version-420)
 
 <a id="introduction"></a>
 ### 1. Introduction
@@ -107,7 +108,7 @@ Author: <a href="mailto:richard@explosion.ai">Richard Paul Hudson, Explosion AI<
 #### 1.1 The basic idea
 
 **Holmes** is a Python 3 library (v3.6—v3.10) running on top of
-[spaCy](https://spacy.io/) (v3.1—v3.4) that supports a number of use cases
+[spaCy](https://spacy.io/) (v3.1—v3.5) that supports a number of use cases
 involving information extraction from English and German texts. In all use cases, the information
 extraction is based on analysing the semantic relationships expressed by the component parts of
 each sentence:
@@ -158,8 +159,7 @@ cases can be put to use out of the box without any training and that the supervi
 typically requires relatively little training data, which is a great advantage because pre-labelled training data is
 not available for many real-world problems.
 
-Holmes has a long and complex history and we are now able to publish it under the MIT license thanks to the goodwill and openness of several companies. I, Richard Hudson, wrote the versions up to 3.0.0 while working at [msg systems](https://www.msg.group/en), a large international software consultancy based near Munich. In late 2021, I changed employers and now work for [Explosion](https://explosion.ai/), the creators of [spaCy](https://spacy.io/) and [Prodigy](https://prodi.gy/). Elements of the Holmes library are covered by a [US patent](https://patents.google.com/patent/US8155946B2/en) that I myself wrote in the early 2000s while working at a startup called Definiens that has since been acquired by [AstraZeneca](https://www.astrazeneca.com/). With the kind permission of both AstraZeneca and msg systems, I am now maintaining Holmes at Explosion and can offer it for the first time under a permissive license: anyone can now use Holmes under the terms of the MIT
-license without having to worry about the patent.
+Holmes has a long and complex history and is now published under the MIT license thanks to the goodwill and openness of several companies. I, Richard Hudson, wrote the versions up to 3.0.0 while working at [msg systems](https://www.msg.group/en), a large international software consultancy based near Munich. From 2021 to 2023, I worked for [Explosion](https://explosion.ai/), the creators of [spaCy](https://spacy.io/) and [Prodigy](https://prodi.gy/). Elements of the Holmes library are covered by a [US patent](https://patents.google.com/patent/US8155946B2/en) that I myself wrote in the early 2000s while working at a startup called Definiens that has since been acquired by [AstraZeneca](https://www.astrazeneca.com/). With the kind permission of both AstraZeneca and msg systems, Holmes is now offered under a permissive license: anyone can now use Holmes under the terms of the MIT license without having to worry about the patent.
 
 <a id="installation"></a>
 #### 1.2 Installation
@@ -218,7 +218,7 @@ The `en_core_web_trf` model requires sufficiently more resources than the other 
 
 The best way of integrating Holmes into a non-Python environment is to
 wrap it as a RESTful HTTP service and to deploy it as a
-microservice. See [here](https://github.com/explosion/holmes-extractor/blob/master/examples/example_search_EN_literature.py) for an example.
+microservice. See [here](https://github.com/richardpaulhudson/holmes-extractor/blob/master/examples/example_search_EN_literature.py) for an example.
 
 <a id="resource-requirements"></a>
 ##### 1.2.5 Resource requirements
@@ -457,7 +457,7 @@ For more examples, please see [section 5](#use-cases-and-examples).
 ### 2. Word-level matching strategies
 
 The following strategies are implemented with 
-[one Python module per strategy](https://github.com/explosion/holmes-extractor/tree/master/holmes_extractor/word_matching). 
+[one Python module per strategy](https://github.com/richardpaulhudson/holmes-extractor/tree/master/holmes_extractor/word_matching). 
 Although the standard library does not support adding bespoke strategies via the [Manager](#manager)
 class, it would be relatively easy for anyone with Python programming skills to
 change the code to enable this.
@@ -545,7 +545,7 @@ subtype of something), *synonyms* (something means the same as
 something) and *named individuals* (something is a specific instance of
 something). The three relationship types are exemplified in Figure 1:
 
-![Figure 1](https://github.com/explosion/holmes-extractor/blob/master/docs/ontology_example.png)
+![Figure 1](https://github.com/richardpaulhudson/holmes-extractor/blob/master/docs/ontology_example.png)
 
 Ontologies are defined to Holmes using the [OWL ontology
 standard](https://www.w3.org/OWL/) serialized using
@@ -727,7 +727,7 @@ Linguistically speaking, if a query phrase consists of a complex question with s
 <a id="coreference-resolution"></a>
 ### 3. Coreference resolution
 
-Before Holmes analyses a searched document or query document, coreference resolution is performed using the [Coreferee](https://github.com/explosion/coreferee)
+Before Holmes analyses a searched document or query document, coreference resolution is performed using the [Coreferee](https://github.com/richardpaulhudson/coreferee)
 library running on top of spaCy.  This means that situations are recognised where pronouns and nouns that are located near one another within a text refer to the same entities. The information from one mention can then be applied to the analysis of further mentions:
 
 I saw a *big dog*. *It* was chasing a cat.   
@@ -1089,7 +1089,7 @@ token is not supported. However, an important difference from
 search phrases is that the topic matching use case places no
 restrictions on the grammatical structures permissible within the query document.
 
-In addition to the [Holmes demonstration website](https://holmes-demo.explosion.services/), the Holmes source code ships with [three examples](https://github.com/explosion/holmes-extractor/blob/master/examples/) demonstrating the topic matching use case with an English literature
+In addition to the [Holmes demonstration website](https://holmes-demo.explosion.services/), the Holmes source code ships with [three examples](https://github.com/richardpaulhudson/holmes-extractor/blob/master/examples/) demonstrating the topic matching use case with an English literature
 corpus, a German literature corpus and a German legal corpus respectively. Users are encouraged to run these
 to get a feel for how they work.
 
@@ -1128,7 +1128,7 @@ are not preselected as having the new classification label are then passed to th
 classifier in the normal way. When enough documents exemplifying the new classification have accumulated in the system,
 the model can be retrained and the preselection search phrases removed.
 
-Holmes ships with an example [script](https://github.com/explosion/holmes-extractor/blob/master/examples/example_supervised_topic_model_EN.py) demonstrating supervised document classification for English with the
+Holmes ships with an example [script](https://github.com/richardpaulhudson/holmes-extractor/blob/master/examples/example_supervised_topic_model_EN.py) demonstrating supervised document classification for English with the
 [BBC Documents dataset](http://mlg.ucd.ie/datasets/bbc.html). The script downloads the documents (for
 this operation and for this operation alone, you will need to be online) and places them in a working directory.
 When training is complete, the script saves the model to the working directory. If the model file is found
@@ -1786,7 +1786,7 @@ answers -- an array of arrays with the semantics:
 <a id="general-comments-2"></a>
 ### 7.1 General comments
 
-The [standard spaCy models](https://spacy.io/models/en) are pipelines consisting of multiple components. A central idea behind spaCy is that users can define and train their own pipelines. Holmes, on the other hand, does not generally support bespoke pipelines: it relies on the presence of various features that the standard pipelines generate as well as on the [Coreferee](https://github.com/explosion/Coreferee) library which itself is designed for use with the standard pipelines. There are, however, certain situations in which the behaviour of the standard spaCy pipelines can be customized in such a way that Holmes still works and which are set out in this section. 
+The [standard spaCy models](https://spacy.io/models/en) are pipelines consisting of multiple components. A central idea behind spaCy is that users can define and train their own pipelines. Holmes, on the other hand, does not generally support bespoke pipelines: it relies on the presence of various features that the standard pipelines generate as well as on the [Coreferee](https://github.com/richardpaulhudson/coreferee) library which itself is designed for use with the standard pipelines. There are, however, certain situations in which the behaviour of the standard spaCy pipelines can be customized in such a way that Holmes still works and which are set out in this section. 
 
 Note that, when a document is deserialized, Holmes checks that the model name and version that were used to generate the document correspond to the model name and version loaded within the current Holmes manager instance. However, Holmes does not check whether any of the techniques explained in this section have been applied either to the serialized document or to the manager; the user is responsible for avoiding any discrepancies between the two states.
 
@@ -1822,7 +1822,7 @@ holmes_ext(doc)
 The word-level matching and the high-level operation of structural
 matching between search-phrase and document subgraphs both work more or
 less as one would expect. What is perhaps more in need of further
-comment is the semantic analysis code subsumed in the [parsing.py](https://github.com/explosion/holmes-extractor/blob/master/holmes_extractor/parsing.py)
+comment is the semantic analysis code subsumed in the [parsing.py](https://github.com/richardpaulhudson/holmes-extractor/blob/master/holmes_extractor/parsing.py)
 script as well as in the `language_specific_rules.py` script for each
 language.
 
@@ -1987,9 +1987,9 @@ The `pytest` variant will only work on machines with sufficient memory resources
 reduce this problem, the tests are distributed across three subdirectories, so that
 `pytest` can be run three times, once from each subdirectory:
 
--   [en](https://github.com/explosion/holmes-extractor/blob/master/tests/en): tests relating to English
--   [de](https://github.com/explosion/holmes-extractor/blob/master/tests/de): tests relating to German
--   [common](https://github.com/explosion/holmes-extractor/blob/master/tests/common): language-independent tests
+-   [en](https://github.com/richardpaulhudson/holmes-extractor/blob/master/tests/en): tests relating to English
+-   [de](https://github.com/richardpaulhudson/holmes-extractor/blob/master/tests/de): tests relating to German
+-   [common](https://github.com/richardpaulhudson/holmes-extractor/blob/master/tests/common): language-independent tests
 
 <a id="areas-for-further-development"></a>
 #### 8.3 Areas for further development
@@ -2083,7 +2083,7 @@ that only documents whose labels begin with a certain string should be searched.
 <a id="version-300"></a>
 ##### 8.4.5 Version 3.0.0
 
--  Moved to [Coreferee](https://github.com/explosion/Coreferee) as the source of coreference information, meaning that coreference resolution is now active for German as well as English; all documents can be serialized; and the latest spaCy version can be supported.
+-  Moved to [Coreferee](https://github.com/richardpaulhudson/coreferee) as the source of coreference information, meaning that coreference resolution is now active for German as well as English; all documents can be serialized; and the latest spaCy version can be supported.
 -  The corpus frequencies of words are now taken into account when scoring topic matches.
 -  Reverse dependencies are now taken into account, so that e.g. *a man dies* can match *the dead man* although the dependencies in the two phrases point in opposite directions.
 -  Merged the pre-existing `Manager` and `MultiprocessingManager` classes into a single `Manager` class, with a redesigned public interface, that uses worker threads for everything except supervised document classification.
@@ -2122,3 +2122,7 @@ installation much faster and more trouble-free.
 - Support was added for [bespoke named-entity labels](#using-bespoke-named-entity-recognition).
 - [Documentation](#non-standard-interaction-with-spacy-models) was added about non-standard interaction with spaCy models.
 
+<a id="version-420"></a>
+##### 8.4.11 Version 4.2.0
+
+- Support was added for spaCy version 3.5.
