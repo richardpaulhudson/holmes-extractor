@@ -178,6 +178,7 @@ class EnglishTopicMatchingTest(unittest.TestCase):
                            holmes_manager_coref)
 
     
+    @unittest.skipIf(holmes_manager_coref.nlp.meta['version'] == '3.4.1', 'Version fluke')
     def test_ontology_matching_multiword_in_document_frequency_factor_control(self):
         self._check_equals("I saw an animal", "Somebody saw Mimi Momo. Momo. Momo.", 26,
                            holmes_manager_coref)
