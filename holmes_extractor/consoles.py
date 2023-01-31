@@ -66,7 +66,7 @@ class HolmesConsoles:
 
     def common(self):
         """Contains functionality common to both consoles."""
-        print("Holmes version", __version__, "written by richard.hudson@explosion.ai")
+        print("Holmes version", __version__, "written by Richard Paul Hudson")
         print(
             "Note that the consoles do not display all information that is available when using Holmes programmatically."
         )
