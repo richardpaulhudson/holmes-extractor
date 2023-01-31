@@ -7,24 +7,24 @@ jobs:
   test-holmes:
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-20.04]
         python_version: ['3.6', '3.7', '3.8', '3.9', '3.10']
         spacy_version: ['3.4.1']
         click_version: ['8.0.1']
         include:
-          - os: 'ubuntu-latest'
+          - os: 'ubuntu-20.04'
             python_version: '3.9'
             spacy_version: '3.5.0'
             click_version: '8.0.1'
-          - os: 'ubuntu-latest'
+          - os: 'ubuntu-20.04'
             python_version: '3.9'
             spacy_version: '3.3.1'
             click_version: '8.0.1'
-          - os: 'ubuntu-latest'
+          - os: 'ubuntu-20.04'
             python_version: '3.9'
             spacy_version: '3.2.4'
             click_version: '8.0.1'
-          - os: 'ubuntu-latest'
+          - os: 'ubuntu-20.04'
             python_version: '3.9'
             spacy_version: '3.1.6'
             click_version: '7.1.2'
