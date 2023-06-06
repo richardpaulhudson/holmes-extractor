@@ -10,7 +10,7 @@ class EmbeddingWordMatchingStrategy(WordMatchingStrategy):
 
     @staticmethod
     def _get_explanation(similarity: float, search_phrase_display_word: str) -> str:
-        printable_similarity = str(int(similarity * 100))
+        printable_similarity = str(round(similarity * 100))
         return "".join(
             (
                 "Has a word embedding that is ",
