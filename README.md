@@ -100,6 +100,7 @@ Author: [Richard Paul Hudson](https://github.com/richardpaulhudson)
         -   [8.4.9 Version 4.0.3](#version-403)
         -   [8.4.10 Version 4.1.0](#version-410)
         -   [8.4.11 Version 4.2.0](#version-420)
+        -   [8.4.12 Version 4.2.1](#version-421)
 
 <a id="introduction"></a>
 ### 1. Introduction
@@ -107,7 +108,7 @@ Author: [Richard Paul Hudson](https://github.com/richardpaulhudson)
 <a id="the-basic-idea"></a>
 #### 1.1 The basic idea
 
-**Holmes** is a Python 3 library (v3.6—v3.10) running on top of
+**Holmes** is a Python 3 library (v3.6—v3.11) running on top of
 [spaCy](https://spacy.io/) (v3.1—v3.5) that supports a number of use cases
 involving information extraction from English and German texts. In all use cases, the information
 extraction is based on analysing the semantic relationships expressed by the component parts of
@@ -2126,3 +2127,8 @@ installation much faster and more trouble-free.
 ##### 8.4.11 Version 4.2.0
 
 - Support was added for spaCy version 3.5.
+
+<a id="version-421"></a>
+##### 8.4.12 Version 4.2.1
+
+- Support was added for Python version 3.11.
