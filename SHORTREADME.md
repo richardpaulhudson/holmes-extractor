@@ -1,4 +1,4 @@
-**Holmes** is a Python 3 library (v3.6—v3.10) running on top of
+**Holmes** is a Python 3 library (v3.6—v3.11) running on top of
 [spaCy](https://spacy.io/) (v3.1—v3.5) that supports a number of use cases
 involving information extraction from English and German texts. In all use cases, the information
 extraction is based on analysing the semantic relationships expressed by the component parts of
