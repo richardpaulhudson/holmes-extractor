@@ -2,6 +2,8 @@ Holmes
 ======
 Author: [Richard Paul Hudson](https://github.com/richardpaulhudson)
 
+*Holmes is no longer actively maintained. It is preserved here as an open-source NLP research/engineering project exploring how syntactic dependency parses can be transformed into language-specific semantic representations for structural information extraction and matching. It combines rule-based linguistic analysis, coreference resolution, lexical and embedding-based matching, ontology support, and supervised classification. Modern foundation models now provide a more capable and flexible approach for most of the tasks Holmes was designed to address.*
+
 -   [1. Introduction](#introduction)
     -   [1.1 The basic idea](#the-basic-idea)
     -   [1.2 Installation](#installation)
